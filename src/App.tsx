@@ -13,7 +13,6 @@ import {
 import { cn } from './lib/utils'
 
 function App() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function onSubmitUser(data: any) {
     console.log('data', data)
   }

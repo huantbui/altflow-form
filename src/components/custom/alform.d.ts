@@ -22,7 +22,7 @@ type HTMLAttributesType =
   | 'time'
   | 'url'
   | 'week'
-  | (string & {})
+  | (string)
 
 type AltFieldComponent =
   | 'datepicker'

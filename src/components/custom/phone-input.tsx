@@ -4,13 +4,13 @@ import {
   FocusEvent,
   KeyboardEvent,
   createRef,
-  useMemo,
-} from "react";
-import { Input } from "../ui/input";
+  useMemo
+} from 'react'
+import { Input } from '../ui/input'
 
 interface PhoneInputProps {
-  totalDigits: number;
-  onChange: any;
+  totalDigits: number
+  onChange: any
 }
 
 /**
@@ -23,73 +23,71 @@ export const PhoneInput = ({ totalDigits, onChange }: PhoneInputProps) => {
   const refs = useMemo(
     () => [...Array(totalDigits)].map(() => createRef<HTMLInputElement>()),
     [totalDigits]
-  );
+  )
 
   const triggerOnChange = () => {
-    const res = refs?.map((ref: any) => ref?.current?.value).join("");
-    onChange && onChange(res);
-  };
+    const res = refs?.map((ref: any) => ref?.current?.value).join('')
+    onChange && onChange(res)
+  }
 
   const setFocus = (idx: number) => {
-    const nextIdx = idx + 1;
+    const nextIdx = idx + 1
     if (nextIdx < totalDigits) {
-      refs[nextIdx].current?.focus();
+      refs[nextIdx].current?.focus()
     }
-  };
+  }
 
   function handleOnChange(
     event: ChangeEvent<HTMLInputElement>,
     idx: any
   ): void {
-    const digit = event?.target?.value?.replace(/[^0-9]/g, "");
+    const digit = event?.target?.value?.replace(/[^0-9]/g, '')
     // if just a space or empty, stay at spot
-    if (digit?.trim() === "") {
-      refs[idx].current?.focus();
-      event.target.value = "";
-      return;
+    if (digit?.trim() === '') {
+      refs[idx].current?.focus()
+      event.target.value = ''
+      return
     }
-    setFocus(idx);
-    triggerOnChange();
+    setFocus(idx)
+    triggerOnChange()
   }
 
-  function handleOnKeyDown(
-    event: KeyboardEvent<HTMLInputElement>,
-    idx: number
-  ): void {
-    const { key } = event;
-    const target = event.target as HTMLInputElement;
-    if (key === "Backspace") {
-      if (target.value === "") {
+  function handleOnKeyDown(event: KeyboardEvent<HTMLInputElement>): void {
+    const { key } = event
+    const target = event.target as HTMLInputElement
+    if (key === 'Backspace') {
+      if (target.value === '') {
         if (target.previousElementSibling !== null) {
-          const pTarget = target.previousElementSibling as HTMLInputElement;
-          pTarget.value = "";
-          pTarget.focus();
-          event.preventDefault();
+          const pTarget = target.previousElementSibling as HTMLInputElement
+          pTarget.value = ''
+          pTarget.focus()
+          event.preventDefault()
         }
       } else {
-        target.value = "";
+        target.value = ''
       }
     }
-    triggerOnChange();
+    triggerOnChange()
   }
 
   function handleOnFocus(event: FocusEvent<HTMLInputElement, Element>): void {
-    event.target.select();
+    event.target.select()
   }
 
   function handleOnPaste(event: ClipboardEvent<HTMLInputElement>): void {
-    const pastedValue = event.clipboardData?.getData("Text");
-    pastedValue.split("").forEach((char, idx) => {
-      console.log("char", char, "at", idx);
+    const pastedValue = event.clipboardData?.getData('Text')
+    pastedValue.split('').forEach((char, idx) => {
+      console.log('char', char, 'at', idx)
       if (refs?.[idx]?.current !== null) {
-        const currentRef = refs[idx].current as any;
-        currentRef.value = char;
-        setFocus(idx);
+        const currentRef = refs[idx].current as any
+        currentRef.value = char
+        setFocus(idx)
       }
-    });
-    triggerOnChange();
-    event.preventDefault();
+    })
+    triggerOnChange()
+    event.preventDefault()
   }
+
   return (
     <div className="flex flex-row space-x-4">
       {refs.map((ref, idx) => {
@@ -106,12 +104,12 @@ export const PhoneInput = ({ totalDigits, onChange }: PhoneInputProps) => {
             autoComplete="one-time-code"
             ref={ref}
             onChange={(e) => handleOnChange(e, idx)}
-            onKeyDown={(e) => handleOnKeyDown(e, idx)}
+            onKeyDown={(e) => handleOnKeyDown(e)}
             onFocus={handleOnFocus}
             onPaste={handleOnPaste}
           />
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
