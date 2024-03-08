@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/form'
 import { cn } from '@/lib/utils'
 import { CalendarIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons'
-import { randomUUID } from 'crypto'
 import { format } from 'date-fns'
 import { ControllerRenderProps, useForm } from 'react-hook-form'
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
@@ -29,6 +28,7 @@ import { Textarea } from '../ui/textarea'
 import { toast } from '../ui/use-toast'
 import { AltField, AltFormProps } from './alform'
 import { PhoneInput } from './phone-input'
+import { v4 as uuid } from 'uuid'
 
 export const AltForm = (props: AltFormProps) => {
   const { onSubmit, fields, resolver } = props
@@ -63,7 +63,7 @@ export const AltForm = (props: AltFormProps) => {
       >
         {fields.map((altfield) => {
           const key =
-            altfield?.name?.toLowerCase()?.replaceAll(' ', '-') || randomUUID()
+            altfield?.name?.toLowerCase()?.replaceAll(' ', '-') || uuid()
           return (
             <FormField
               key={key}
@@ -184,7 +184,7 @@ const Field = ({ altfield, field }: FieldProps) => {
           </PopoverContent>
         </Popover>
       )
-    default:
+    default: {
       const errorMessage = `Component "${component}" does not exist`
       console.error(errorMessage)
       return (
@@ -194,5 +194,6 @@ const Field = ({ altfield, field }: FieldProps) => {
           <AlertDescription>{errorMessage}</AlertDescription>
         </Alert>
       )
+    }
   }
 }

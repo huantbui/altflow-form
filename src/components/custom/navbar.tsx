@@ -1,6 +1,3 @@
-'use client'
-
-import Link from 'next/link'
 import * as React from 'react'
 
 import {
@@ -9,11 +6,15 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle
+  NavigationMenuTrigger
 } from '@/components/ui/navigation-menu'
 import { cn } from '@/lib/utils'
-import { UserButton } from '@clerk/nextjs'
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/clerk-react'
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -105,14 +106,12 @@ export function Navbar() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/docs" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Documentation
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <UserButton afterSignOutUrl="/" />
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
       </NavigationMenuList>
     </NavigationMenu>
   )
