@@ -1,21 +1,65 @@
 import { ThemeProvider } from '@/components/theme-provider'
-import { ModeToggle } from './components/mode-toggle'
-import { Navbar } from './components/custom/navbar'
-import { Toaster } from './components/ui/toaster'
+import { zodResolver } from '@hookform/resolvers/zod'
+import z from 'zod'
 import { AltForm } from './components/custom/altform'
+import { Navbar } from './components/custom/navbar'
+import { ModeToggle } from './components/mode-toggle'
 import {
   Card,
-  CardHeader,
-  CardTitle,
+  CardContent,
   CardDescription,
-  CardContent
+  CardHeader,
+  CardTitle
 } from './components/ui/card'
+import { Toaster } from './components/ui/toaster'
 import { cn } from './lib/utils'
+
+const USE_SCHEMA_VALIDATION = false
 
 function App() {
   async function onSubmitUser(data: any) {
     console.log('data', data)
+    throw new Error('failed to save down to server')
   }
+
+  /**
+   * https://github.com/colinhacks/zod?tab=readme-ov-file#superrefine
+   * https://github.com/colinhacks/zod/discussions/938
+   */
+  const schema = z
+    .object({
+      full_name: z.string().max(6, 'max is 6'),
+      // code: z.string().max(10, 'phonenumber'),
+      // email: z.string().email(),
+      counter: z.coerce.number().positive(),
+      email: z.string().optional(), // Keeping both email and phone optional on base schema and validating values inside `superRefine`
+      phone: z.string().optional()
+      // phoneNumber: z.string().max(10),
+      // dob: z.date({
+      //   required_error: 'A date of birth is required.'
+      // })
+    })
+    .superRefine(({ email, phone }, ctx) => {
+      if (email === '' && phone !== '') {
+        if (!phone) {
+          return ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Required phone data',
+            path: ['phone']
+          })
+        }
+      }
+
+      if (email !== '' && phone === '') {
+        return ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Required Email',
+          path: ['email']
+        })
+      }
+    })
+
+  const resolver = USE_SCHEMA_VALIDATION ? zodResolver(schema) : undefined
 
   return (
     <ThemeProvider defaultTheme="system">
@@ -37,10 +81,10 @@ function App() {
               <AltForm
                 onSubmit={onSubmitUser}
                 name="user"
-                // resolver={zodResolver(schema)}
-                fields={[
+                resolver={resolver}
+                altfields={[
                   {
-                    name: 'name',
+                    name: 'full_name',
                     label: 'Name',
                     component: 'input',
                     attributes: {
@@ -48,11 +92,28 @@ function App() {
                     }
                   },
                   {
+                    name: 'counter',
+                    label: 'Counter',
+                    component: 'input',
+                    attributes: {
+                      type: 'number'
+                    },
+                    parentFieldId: 'full_name'
+                  },
+                  {
                     name: 'email',
                     label: 'Email',
                     component: 'input',
                     attributes: {
                       type: 'email'
+                    }
+                  },
+                  {
+                    name: 'phone',
+                    label: 'Phone',
+                    component: 'input',
+                    attributes: {
+                      type: 'tel'
                     }
                   }
                 ]}

@@ -1,3 +1,5 @@
+import { Resolver } from 'react-hook-form'
+
 type HTMLAttributesType =
   | React.InputHTMLAttributes<unknown>['type']
   | 'button'
@@ -22,7 +24,8 @@ type HTMLAttributesType =
   | 'time'
   | 'url'
   | 'week'
-  | (string)
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  | (string & {})
 
 type AltFieldComponent =
   | 'datepicker'
@@ -45,11 +48,22 @@ export interface AltField {
     type?: HTMLAttributesType
     [key: string]: any
   }
+  parentFieldId?: string
 }
 
-interface AltFormProps {
+export type AltFieldsMap = {
+  initialValues: any
+  map: Record<
+    AltField['name'],
+    AltField & {
+      order: string
+    }
+  >
+}
+
+export interface AltFormProps {
   name?: string
-  fields: AltField[]
-  resolver?: any
+  altfields: AltField[]
+  resolver?: Resolver
   onSubmit: any
 }
