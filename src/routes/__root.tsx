@@ -23,6 +23,7 @@ function RootComponent() {
         <div className="container flex h-14 max-w-screen-2xl items-center">
           <Navbar />
           <ModeToggle />
+          <Link to="/sign-up">sign-up</Link>
           <Link to="/dashboard">Dashboard</Link>
         </div>
       </header>

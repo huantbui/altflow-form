@@ -12,22 +12,27 @@ import { CalendarIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
 import { ControllerRenderProps, UseFormReturn, useForm } from 'react-hook-form'
 import { v4 as uuid } from 'uuid'
-import { Alert, AlertDescription, AlertTitle } from '../../ui/alert'
-import { Button } from '../../ui/button'
-import { Calendar } from '../../ui/calendar'
-import { Input } from '../../ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover'
+
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { toast } from '@/components/ui/use-toast'
+import { VerificationCode } from '@/components/ui/verification'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@radix-ui/react-popover'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '../../ui/select'
-import { Slider } from '../../ui/slider'
-import { Textarea } from '../../ui/textarea'
-import { toast } from '../../ui/use-toast'
-import { PhoneInput } from '../phone-input'
+} from '@radix-ui/react-select'
+import { Slider } from '@radix-ui/react-slider'
+import { Calendar } from 'lucide-react'
 import { AltField, AltFieldsMap, AltFormProps } from './altform'
 import { isParentFieldAnswered, prepareFormData } from './states'
 
@@ -101,7 +106,6 @@ export const AltForm = (props: AltFormProps) => {
   // console.log('getValues', getValues())
   // console.log('formState', formState)
 
-  console.log('re-render')
   return (
     <Form {...form}>
       <form
@@ -165,7 +169,13 @@ const Field = ({ altfield, field }: FieldProps) => {
 
   switch (component) {
     case 'verification':
-      return <PhoneInput totalDigits={10} onChange={onChange} />
+      return (
+        <VerificationCode
+          digits={attributes?.length || 1}
+          type={attributes?.type || 'tel'}
+          onChange={onChange}
+        />
+      )
     case 'input':
       return (
         <Input
@@ -173,6 +183,7 @@ const Field = ({ altfield, field }: FieldProps) => {
           className="resize-none w-full"
           {...field}
           {...attributes}
+          onChange={onChange}
         />
       )
     case 'select':

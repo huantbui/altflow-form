@@ -1,3 +1,4 @@
+import { numbersOnly } from '@/lib/utils'
 import {
   ChangeEvent,
   ClipboardEvent,
@@ -6,23 +7,28 @@ import {
   createRef,
   useMemo
 } from 'react'
-import { Input } from '../ui/input'
+import { HTMLAttributesType } from '../custom/altform/altform'
+import { Input } from './input'
 
 interface PhoneInputProps {
-  totalDigits: number
-  onChange: any
+  digits: number
+  type: HTMLAttributesType
+  onChange?: React.ChangeEventHandler<any>
 }
 
 /**
  * @example https://github.com/drac94/react-auth-code-input/blob/master/src/index.tsx
  * - https://www.luisguerrero.me/react-auth-code-input/
  *
- *
  */
-export const PhoneInput = ({ totalDigits, onChange }: PhoneInputProps) => {
+export const VerificationCode = ({
+  digits,
+  type,
+  onChange
+}: PhoneInputProps) => {
   const refs = useMemo(
-    () => [...Array(totalDigits)].map(() => createRef<HTMLInputElement>()),
-    [totalDigits]
+    () => [...Array(digits || 0)].map(() => createRef<HTMLInputElement>()),
+    [digits]
   )
 
   const triggerOnChange = () => {
@@ -32,7 +38,7 @@ export const PhoneInput = ({ totalDigits, onChange }: PhoneInputProps) => {
 
   const setFocus = (idx: number) => {
     const nextIdx = idx + 1
-    if (nextIdx < totalDigits) {
+    if (nextIdx < digits) {
       refs[nextIdx].current?.focus()
     }
   }
@@ -41,7 +47,9 @@ export const PhoneInput = ({ totalDigits, onChange }: PhoneInputProps) => {
     event: ChangeEvent<HTMLInputElement>,
     idx: any
   ): void {
-    const digit = event?.target?.value?.replace(/[^0-9]/g, '')
+    const digit = ['number', 'tel'].includes(type as string)
+      ? numbersOnly(event?.target?.value)
+      : event?.target?.value
     // if just a space or empty, stay at spot
     if (digit?.trim() === '') {
       refs[idx].current?.focus()
@@ -77,7 +85,6 @@ export const PhoneInput = ({ totalDigits, onChange }: PhoneInputProps) => {
   function handleOnPaste(event: ClipboardEvent<HTMLInputElement>): void {
     const pastedValue = event.clipboardData?.getData('Text')
     pastedValue.split('').forEach((char, idx) => {
-      console.log('char', char, 'at', idx)
       if (refs?.[idx]?.current !== null) {
         const currentRef = refs[idx].current as any
         currentRef.value = char

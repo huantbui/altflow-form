@@ -46,6 +46,7 @@ export interface AltField {
   description?: string
   attributes?: {
     type?: HTMLAttributesType
+    length?: number
     [key: string]: any
   }
   parentFieldId?: string
