@@ -33,7 +33,7 @@ export const VerificationCode = ({
 
   const triggerOnChange = () => {
     const res = refs?.map((ref: any) => ref?.current?.value).join('')
-    onChange && onChange(res)
+    onChange && onChange(res as any)
   }
 
   const setFocus = (idx: number) => {

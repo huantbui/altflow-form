@@ -15,6 +15,7 @@ import { v4 as uuid } from 'uuid'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/components/ui/use-toast'
@@ -32,7 +33,6 @@ import {
   SelectValue
 } from '@radix-ui/react-select'
 import { Slider } from '@radix-ui/react-slider'
-import { Calendar } from 'lucide-react'
 import { AltField, AltFieldsMap, AltFormProps } from './altform'
 import { isParentFieldAnswered, prepareFormData } from './states'
 

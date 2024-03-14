@@ -29,7 +29,7 @@ function LoginComponent() {
   const search = routeApi.useSearch()
 
   if (isSignedIn) {
-    navigate({ to: search.redirect })
+    navigate({ to: search.redirect } as any)
   }
 
   return (
