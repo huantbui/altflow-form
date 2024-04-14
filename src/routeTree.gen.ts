@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as DashboardImport } from './routes/dashboard'
+import { Route as AnchorTasksImport } from './routes/anchor/tasks'
 
 // Create Virtual Routes
 
@@ -43,6 +44,11 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const AnchorTasksRoute = AnchorTasksImport.update({
+  path: '/anchor/tasks',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -63,6 +69,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignUpLazyImport
       parentRoute: typeof rootRoute
     }
+    '/anchor/tasks': {
+      preLoaderRoute: typeof AnchorTasksImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -73,6 +83,7 @@ export const routeTree = rootRoute.addChildren([
   DashboardRoute,
   LoginRoute,
   SignUpLazyRoute,
+  AnchorTasksRoute,
 ])
 
 /* prettier-ignore-end */
