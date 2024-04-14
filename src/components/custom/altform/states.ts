@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FormState, UseFormGetFieldState } from 'react-hook-form'
 import { AltFieldsMap } from './altform'
 
@@ -5,14 +6,15 @@ export const isParentFieldAnswered = (
   parentId: string,
   formState: FormState<any>
 ) => {
-  //   console.log('parentId', parentId)
-  //   console.log('formstate', formState)
   const { defaultValues, errors, dirtyFields } = formState
 
   const isParentDirty = dirtyFields[parentId] === true
   const doesParentHaveDefaultValue = defaultValues?.[parentId] !== ''
   const doesParentHaveError = errors?.[parentId] === null
 
+  console.log('isParentDirty', isParentDirty)
+  console.log('doesParentHaveDefaultValue', doesParentHaveDefaultValue)
+  console.log('doesParentHaveError', doesParentHaveError)
   if (isParentDirty) {
     return true
   }
@@ -26,9 +28,9 @@ export const prepareFormData = (
   getFieldState: UseFormGetFieldState<any>
 ) => {
   //   const { defaultValues, dirtyFields } = formState
-  console.log('formState', formState)
-  console.log('altfieldsMap', altfieldsMap)
-  console.log('getFieldState', getFieldState)
+  // console.log('formState', formState)
+  // console.log('altfieldsMap', altfieldsMap)
+  // console.log('getFieldState', getFieldState)
 
   const keys: string[] = Object.keys(answers)
 

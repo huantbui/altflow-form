@@ -1,3 +1,4 @@
+import { SelectOption } from '@/components/ui/multi-select'
 import { Resolver } from 'react-hook-form'
 
 type HTMLAttributesType =
@@ -28,6 +29,8 @@ type HTMLAttributesType =
   | (string & {})
 
 type AltFieldComponent =
+  | 'checkbox'
+  | 'checkboxes'
   | 'datepicker'
   | 'input'
   | 'select'
@@ -39,11 +42,13 @@ type AltFieldComponent =
 export interface AltField {
   name: string
   placeholder?: string
-  defaultValue?: string
+  defaultValue?: string | string[]
   component: AltFieldComponent
   required?: boolean
   label?: string
   description?: string
+  options?: string[] | SelectOption[]
+  isMulti?: boolean
   attributes?: {
     type?: HTMLAttributesType
     length?: number

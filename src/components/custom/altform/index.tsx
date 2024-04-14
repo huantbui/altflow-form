@@ -1,39 +1,10 @@
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form'
-import { cn } from '@/lib/utils'
-import { CalendarIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons'
-import { format } from 'date-fns'
-import { ControllerRenderProps, UseFormReturn, useForm } from 'react-hook-form'
-import { v4 as uuid } from 'uuid'
-
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { Form, FormField } from '@/components/ui/form'
 import { toast } from '@/components/ui/use-toast'
-import { VerificationCode } from '@/components/ui/verification'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@radix-ui/react-popover'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@radix-ui/react-select'
-import { Slider } from '@radix-ui/react-slider'
+import { UseFormReturn, useForm } from 'react-hook-form'
+import { v4 as uuid } from 'uuid'
 import { AltField, AltFieldsMap, AltFormProps } from './altform'
+import { FieldLayout } from './layout'
 import { isParentFieldAnswered, prepareFormData } from './states'
 
 export const AltForm = (props: AltFormProps) => {
@@ -133,18 +104,7 @@ export const AltForm = (props: AltFormProps) => {
               control={form.control}
               name={altfield.name}
               render={({ field }) => (
-                <FormItem>
-                  {altfield.label ? (
-                    <FormLabel>{altfield.label}</FormLabel>
-                  ) : null}
-                  <FormControl>
-                    <Field altfield={altfield} field={field} />
-                  </FormControl>
-                  {altfield.description ? (
-                    <FormDescription>{altfield.description}</FormDescription>
-                  ) : null}
-                  <FormMessage />
-                </FormItem>
+                <FieldLayout altfield={altfield} field={field} />
               )}
             />
           )
@@ -156,114 +116,4 @@ export const AltForm = (props: AltFormProps) => {
       </form>
     </Form>
   )
-}
-
-interface FieldProps {
-  altfield: AltField
-  field: ControllerRenderProps
-}
-
-const Field = ({ altfield, field }: FieldProps) => {
-  const { component, attributes } = altfield
-  const { onChange } = field
-
-  switch (component) {
-    case 'verification':
-      return (
-        <VerificationCode
-          digits={attributes?.length || 1}
-          type={attributes?.type || 'tel'}
-          onChange={onChange}
-        />
-      )
-    case 'input':
-      return (
-        <Input
-          placeholder={altfield?.placeholder}
-          className="resize-none w-full"
-          {...field}
-          {...attributes}
-          onChange={onChange}
-        />
-      )
-    case 'select':
-      return (
-        <Select onValueChange={field.onChange} defaultValue={field.value}>
-          <FormControl>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a verified email to display" />
-            </SelectTrigger>
-          </FormControl>
-          <SelectContent>
-            <SelectItem value="m@example.com">m@example.com</SelectItem>
-            <SelectItem value="m@google.com">m@google.com</SelectItem>
-            <SelectItem value="m@support.com">m@support.com</SelectItem>
-          </SelectContent>
-        </Select>
-      )
-    case 'slider':
-      return (
-        <Slider
-          defaultValue={[50]}
-          max={100}
-          step={1}
-          className={cn('w-[60%]')}
-          {...attributes}
-        />
-      )
-    case 'textarea':
-      return (
-        <Textarea
-          placeholder={altfield?.placeholder}
-          className="resize-none"
-          {...field}
-          {...attributes}
-        />
-      )
-    case 'datepicker':
-      return (
-        <Popover>
-          <PopoverTrigger asChild>
-            <FormControl>
-              <Button
-                variant={'outline'}
-                className={cn(
-                  'w-full pl-3 text-left font-normal',
-                  !field.value && 'text-muted-foreground'
-                )}
-              >
-                {field.value ? (
-                  format(field.value, 'PPP')
-                ) : (
-                  <span>Pick a date</span>
-                )}
-                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-              </Button>
-            </FormControl>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode={altfield?.attributes?.mode}
-              selected={field.value}
-              onSelect={field.onChange}
-              disabled={(date) =>
-                date > new Date() || date < new Date('1900-01-01')
-              }
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-      )
-    default: {
-      const errorMessage = `Component "${component}" does not exist`
-      console.error(errorMessage)
-      return (
-        <Alert variant="destructive">
-          <ExclamationTriangleIcon className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{errorMessage}</AlertDescription>
-        </Alert>
-      )
-    }
-  }
 }
