@@ -75,12 +75,27 @@ function SignUp() {
             resolver={resolver}
             altfields={[
               {
-                name: 'full_name',
-                label: 'Name',
+                name: 'first_name',
+                label: 'First Name',
                 component: 'input',
                 attributes: {
                   type: 'text'
                 }
+              },
+              {
+                name: 'last_name',
+                label: 'Last Name',
+                component: 'input',
+                attributes: {
+                  type: 'text'
+                }
+              },
+              {
+                name: 'event_name',
+                label: 'Event Name',
+                placeholder: 'Select an event',
+                component: 'select',
+                options: ['Vaking 1', 'Meetup 234']
               },
               {
                 name: 'email',
