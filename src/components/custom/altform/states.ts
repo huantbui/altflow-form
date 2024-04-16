@@ -24,10 +24,10 @@ export const isParentFieldAnswered = (
 export const prepareFormData = (
   answers: Record<string, string | number | boolean>,
   altfieldsMap: AltFieldsMap,
-  formState: FormState<any>,
-  getFieldState: UseFormGetFieldState<any>
+  _formState: FormState<any>,
+  _getFieldState: UseFormGetFieldState<any>
 ) => {
-  //   const { defaultValues, dirtyFields } = formState
+    // const { defaultValues, dirtyFields } = formState
   // console.log('formState', formState)
   // console.log('altfieldsMap', altfieldsMap)
   // console.log('getFieldState', getFieldState)
